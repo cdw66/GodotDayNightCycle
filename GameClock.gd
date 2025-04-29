@@ -7,8 +7,8 @@ var hour: int = 8
 var minute: int = 0
 var paused: bool = false
 
-@export var seconds_per_in_game_minute: float = 1.25
-#@export var seconds_per_in_game_minute: float = 0.1
+#@export var seconds_per_in_game_minute: float = 1.25
+@export var seconds_per_in_game_minute: float = 0.01
 
 var _accumulator := 0.0
 
