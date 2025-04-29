@@ -1,0 +1,57 @@
+[gd_scene load_steps=6 format=3 uid="uid://b7iblb2m1rc6f"]
+
+[ext_resource type="PackedScene" uid="uid://d0gd66hcarbth" path="res://Scenes/Player/Player.tscn" id="1_glv2v"]
+[ext_resource type="Script" uid="uid://7gnuk2hdtskl" path="res://ClockUI.gd" id="2_uu6xs"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_uu6xs"]
+sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+
+[sub_resource type="Sky" id="Sky_r0du0"]
+sky_material = SubResource("ProceduralSkyMaterial_uu6xs")
+
+[sub_resource type="Environment" id="Environment_cm0pq"]
+background_mode = 2
+sky = SubResource("Sky_r0du0")
+tonemap_mode = 2
+glow_enabled = true
+
+[node name="Root" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_cm0pq")
+
+[node name="Platform" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0614594, 0)
+use_collision = true
+size = Vector3(10, 0.1, 10)
+
+[node name="ProtoController" parent="." instance=ExtResource("1_glv2v")]
+can_sprint = true
+can_crouch = true
+can_freefly = true
+enable_bobbing = true
+input_left = "left"
+input_right = "right"
+input_forward = "forward"
+input_back = "back"
+
+[node name="ClockUI" type="CanvasLayer" parent="."]
+script = ExtResource("2_uu6xs")
+
+[node name="ClockPanel" type="Control" parent="ClockUI"]
+layout_mode = 3
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+
+[node name="ClockLabel" type="Label" parent="ClockUI/ClockPanel"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -52.0
+offset_top = 12.0
+offset_right = -12.0
+offset_bottom = 35.0
+grow_horizontal = 0
