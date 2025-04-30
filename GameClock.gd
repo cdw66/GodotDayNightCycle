@@ -44,3 +44,23 @@ func pause():
 
 func resume():
 	paused = false
+
+# Function for getting the precise hour as a float
+func get_current_precise_hour() -> float:
+	# Calculate the fraction of the current in-game minute that has passed
+	# based on the time accumulated since the last minute tick.
+	var minute_progress: float = 0.0
+	# Prevent division by zero if time speed is extremely fast or zero
+	if seconds_per_in_game_minute > 0.0001:
+		minute_progress = _accumulator / seconds_per_in_game_minute
+
+	# Clamp progress just in case accumulator slightly exceeds due to float precision
+	minute_progress = clamp(minute_progress, 0.0, 1.0)
+
+	# Calculate the total precise minute and hour
+	var precise_minute: float = float(minute) + minute_progress
+	var precise_hour: float = float(hour) + (precise_minute / 60.0)
+
+	# Return the value, ensuring it wraps around 24 hours correctly using fposmod
+	# fposmod ensures the result is always positive, unlike regular fmod
+	return fposmod(precise_hour, 24.0)
