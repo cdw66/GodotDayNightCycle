@@ -9,6 +9,7 @@ sky_material = ExtResource("2_ge6uf")
 [sub_resource type="Environment" id="Environment_vupfr"]
 background_mode = 2
 sky = SubResource("Sky_743wk")
+ambient_light_sky_contribution = 0.0
 
 [node name="DayNightCycle" type="Node3D"]
 script = ExtResource("1_ys5nt")
