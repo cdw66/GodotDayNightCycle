@@ -3,12 +3,12 @@ extends Node
 signal time_updated(day: int, hour: int, minute: int)
 
 var day: int = 1
-var hour: int = 8
+var hour: int = 5
 var minute: int = 0
 var paused: bool = false
 
-#@export var seconds_per_in_game_minute: float = 1.25
-@export var seconds_per_in_game_minute: float = 0.01
+@export var seconds_per_in_game_minute: float = 1.25
+#@export var seconds_per_in_game_minute: float = 0.01
 
 var _accumulator := 0.0
 

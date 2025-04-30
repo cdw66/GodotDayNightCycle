@@ -1,25 +1,21 @@
 [gd_scene load_steps=5 format=3 uid="uid://ctsitfvedmvdg"]
 
 [ext_resource type="Script" uid="uid://4dsfaedxiyge" path="res://DayNightCycle.gd" id="1_ys5nt"]
+[ext_resource type="Material" uid="uid://cjx2xpunhyc1a" path="res://SimpleSky.tres" id="2_ge6uf"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_8k0a0"]
-sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
-ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+[sub_resource type="Sky" id="Sky_743wk"]
+sky_material = ExtResource("2_ge6uf")
 
-[sub_resource type="Sky" id="Sky_ys5nt"]
-sky_material = SubResource("ProceduralSkyMaterial_8k0a0")
-
-[sub_resource type="Environment" id="Environment_ge6uf"]
+[sub_resource type="Environment" id="Environment_vupfr"]
 background_mode = 2
-sky = SubResource("Sky_ys5nt")
-tonemap_mode = 2
-glow_enabled = true
+sky = SubResource("Sky_743wk")
 
 [node name="DayNightCycle" type="Node3D"]
 script = ExtResource("1_ys5nt")
+sky_material = ExtResource("2_ge6uf")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_ge6uf")
+environment = SubResource("Environment_vupfr")
 
 [node name="SunLight" type="DirectionalLight3D" parent="."]
 light_color = Color(1, 0.967331, 0.805942, 1)

@@ -13,6 +13,11 @@ extends Node3D
 @export var day_light_color: Color = Color(1, 1, 0.9)
 @export var night_light_color: Color = Color(0.6, 0.7, 1.0)
 
+# --- NEW Sky Shader Exports ---
+@export var sky_material: ShaderMaterial # Drag your Sky's ShaderMaterial here
+@export var sun_texture: Texture2D      # Optional: Drag sun texture here
+@export var moon_texture: Texture2D     # Optional: Drag moon texture here
+
 # Define the rotation angles for key positions
 const SUNRISE_ANGLE: float = 0.0   # Sun at horizon
 const NOON_ANGLE: float = -90.0  # Sun at peak
@@ -29,6 +34,24 @@ var _night_duration_hours: float = 12.0
 func _ready():
 	# Calculate initial day/night durations
 	_calculate_durations()
+
+	# --- NEW: Set textures on shader if provided ---
+	print("Exported sky_material           ->", sky_material)
+	var env_mat : ShaderMaterial = get_viewport().world_3d.environment.sky.sky_material
+	print("Environment.material.sky        ->", env_mat)
+	print("Same object? ", sky_material == env_mat)   # ➜ should be **true**
+	
+	if sky_material != null:
+		var use_tex = false
+		if sun_texture != null:
+			sky_material.set_shader_parameter("sun_texture", sun_texture)
+			use_tex = true
+		if moon_texture != null:
+			sky_material.set_shader_parameter("moon_texture", moon_texture)
+			use_tex = true
+		sky_material.set_shader_parameter("use_textures", use_tex) # Tell shader if we set textures
+	# ----------------------------------------------
+
 	# Connect to the GameClock singleton's signal
 	if GameClock != null:
 		GameClock.time_updated.connect(_on_time_updated)
@@ -128,6 +151,22 @@ func _update_cycle(current_hour_float: float) -> void:
 
 	moon_light.light_energy = moon_fade * max_night_light_energy
 	moon_light.light_color = night_light_color
+	
+	# --- NEW: Update Sky Shader Uniforms ---
+	if sky_material != null:
+		#print("WE HAVE A SHADER")
+		# Calculate direction vectors (opposite of light's -Z axis)
+		var sun_dir: Vector3 = sun_light.global_transform.basis.z.normalized()
+		#print(sun_dir)
+		var moon_dir: Vector3 = moon_light.global_transform.basis.z.normalized()
+
+		# Pass data to the shader
+		sky_material.set_shader_parameter("sun_direction", sun_dir)
+		#print("Sun Dir Y:", sun_dir.y)
+		sky_material.set_shader_parameter("moon_direction", moon_dir)
+		sky_material.set_shader_parameter("sun_progress", day_progress if _is_daytime(current_hour_float) else 0.0) # Pass actual progress only when active
+		sky_material.set_shader_parameter("moon_progress", night_progress if not _is_daytime(current_hour_float) else 0.0)
+	# -------------------------------------
 
 	# --- Environment (Optional) ---
 	# You might want to adjust ambient light, sky, fog etc., based on sun_fade or moon_fade
